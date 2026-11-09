@@ -33,10 +33,9 @@
 
 int compare_int_asc(const void *a, const void *b)
 {
-    // TODO
-    (void)a;
-    (void)b;
-    return 0;
+    int x = *(const int *)a;
+    int y = *(const int *)b;
+    return (x > y) - (x < y);
 }
 
 /*
@@ -49,10 +48,8 @@ int compare_int_asc(const void *a, const void *b)
 
 int compare_int_desc(const void *a, const void *b)
 {
-    // TODO
-    (void)a;
-    (void)b;
-    return 0;
+    int x = compare_int_asc(b, a);
+    return x;
 }
 
 /*
@@ -66,10 +63,9 @@ int compare_int_desc(const void *a, const void *b)
 
 int compare_float_asc(const void *a, const void *b)
 {
-    // TODO
-    (void)a;
-    (void)b;
-    return 0;
+    float x = *(const float *)a;
+    float y = *(const float *)b;
+    return (x > y) - (x < y);
 }
 
 /*
@@ -80,11 +76,10 @@ int compare_float_asc(const void *a, const void *b)
 
 int compare_float_desc(const void *a, const void *b)
 {
-    // TODO
-    (void)a;
-    (void)b;
-    return 0;
+    int x = compare_flat_asc(b, a);
+    return x;
 }
+
 
 /*
  * STEP 5: compare_str_asc
@@ -97,10 +92,10 @@ int compare_float_desc(const void *a, const void *b)
 
 int compare_str_asc(const void *a, const void *b)
 {
-    // TODO
-    (void)a;
-    (void)b;
-    return 0;
+    a = *(const char *)a;
+    b = *(const char *)b;
+    int x = strcmp(a,b);
+    return x;
 }
 
 /*
@@ -111,10 +106,8 @@ int compare_str_asc(const void *a, const void *b)
 
 int compare_str_desc(const void *a, const void *b)
 {
-    // TODO
-    (void)a;
-    (void)b;
-    return 0;
+    int x = compare_str_asc(b , a);
+    return x;
 }
 
 /*
@@ -131,10 +124,10 @@ int compare_str_desc(const void *a, const void *b)
 
 int compare_strptr_asc(const void *a, const void *b)
 {
-    // TODO
-    (void)a;
-    (void)b;
-    return 0;
+    const char *x = *(const char * const *)a;
+    const char *y = *(const char * const *)b;
+    int z = strcmp(x,y);
+    return z;
 }
 
 /*
@@ -145,10 +138,8 @@ int compare_strptr_asc(const void *a, const void *b)
 
 int compare_strptr_desc(const void *a, const void *b)
 {
-    // TODO
-    (void)a;
-    (void)b;
-    return 0;
+    int x = compare_strptr_asc(b,a);
+    return x;
 }
 
 /* ======================================================================
@@ -167,10 +158,24 @@ int compare_strptr_desc(const void *a, const void *b)
 
 void swap_elements(void *a, void *b, size_t size)
 {
-    // TODO
-    (void)a;
-    (void)b;
-    (void)size;
+    if(a || b == NULL)
+    {
+        return NULL;
+    }
+    if(size == 0)
+    {
+        return NULL;
+    }
+    if(a == b)
+    {
+        return NULL;
+    }
+    else
+    {
+        unsigned char x = *(unsigned char*)a;
+        unsigned char y = *(unsigned char*)b;
+        return b == x, a == y;
+    }
 }
 
 /*
@@ -194,11 +199,22 @@ void swap_elements(void *a, void *b, size_t size)
 
 void bubble_sort(void *base, size_t count, size_t size, Comparator compare)
 {
-    // TODO
-    (void)base;
-    (void)count;
-    (void)size;
-    (void)compare;
+    if(base || compare == NULL)
+    {
+        return NULL;
+    }
+    if(size == 0)
+    {
+        return NULL;
+    }
+    if(count < 2)
+    {
+        return NULL;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 /*
@@ -213,12 +229,16 @@ void bubble_sort(void *base, size_t count, size_t size, Comparator compare)
 
 bool is_sorted_array(const void *base, size_t count, size_t size, Comparator compare)
 {
-    // TODO
-    (void)base;
-    (void)count;
-    (void)size;
-    (void)compare;
-    return false;
+    if(compare == NULL || size == 0)
+    {
+        return false;
+    }
+    if (base == NULL && count >= 2)
+    {
+        return false;
+    }
+    else
+    return 0;
 }
 
 /* ======================================================================
