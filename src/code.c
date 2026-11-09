@@ -240,7 +240,7 @@ bool is_sorted_array(const void *base, size_t count, size_t size, Comparator com
     else
     return 0;
 }
-
+ 
 /* ======================================================================
  * PART 3: Using qsort() and the comparators
  *
