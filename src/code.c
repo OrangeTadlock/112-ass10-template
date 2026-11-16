@@ -159,26 +159,18 @@ int compare_strptr_desc(const void *a, const void *b)
 
 void swap_elements(void *a, void *b, size_t size)
 {
-    if(a == NULL || b == NULL)
+    if(a == NULL || b == NULL || a == b || size == 0)
     {
         return;
     }
-    if(size == 0)
+    unsigned char *ptr_a = (unsigned char *)a;
+    unsigned char *ptr_b = (unsigned char *)b;
+    for(size_t i = 0; i < size; i++)
     {
-        return;
-    }
-    if(a == b)
-    {
-        return;
-    }
-    else
-    {
-        unsigned char x = *(unsigned char*)a;
-        unsigned char y = *(unsigned char*)b;
-        *(unsigned char*)a = y;
-        *(unsigned char*)b = x;
-        return;
-    }
+        unsigned char temp = ptr_a[i];
+        ptr_a[i] = ptr_b[i];
+        ptr_b[i] = temp;
+    }  
 }
 
 /*
@@ -202,37 +194,27 @@ void swap_elements(void *a, void *b, size_t size)
 
 void bubble_sort(void *base, size_t count, size_t size, Comparator compare)
 {
-    if(base == NULL || compare == NULL)
+    if(base == NULL || compare == NULL || size == 0 || count < 2)
     {
         return;
     }
-    if(size == 0)
+    unsigned char *arr = (unsigned char *)base;
+    for(size_t k = 0; k < count - 1; k++)
     {
-        return;
-    }
-    if(count < 2)
-    {
-        return;
-    }
-    else
-    {
-        for(size_t k = 0; k < count - 1; k++)
+        bool swapped = false;
+        for(size_t i = 0; i < count - 1 - k; i++)
         {
-            bool swapped = false;
-            for(size_t i = 0; i < count - 1 - k; i++)
+            unsigned char *left = arr + i * size;
+            unsigned char *right = arr + (i + 1) * size;
+            if(compare(left, right) > 0)
             {
-                unsigned char *left = (unsigned char *)base + i * size;
-                unsigned char *right = (unsigned char *)base + (i + 1) * size;
-                if(compare(left, right) > 0)
-                {
-                    swap_elements(left, right, size);
-                    swapped = true;
-                }
+                swap_elements(left, right, size);
+                swapped = true;
             }
-            if(!swapped)
-            {
-                break;
-            }
+        }
+        if(!swapped)
+        {
+            break;
         }
     }
 }
@@ -253,15 +235,25 @@ bool is_sorted_array(const void *base, size_t count, size_t size, Comparator com
     {
         return false;
     }
-    if (base == NULL && count >= 2)
-    {
-        return false;
-    }
-    else
+    if(count < 2)
     {
         return true;
     }
-
+    if(base == NULL)
+    {
+        return false;
+    }
+    const unsigned char *arr = (const unsigned char *)base;
+    for(size_t i = 0; i < count - 1; i++)
+    {
+        const unsigned char *left = arr + i * size;
+        const unsigned char *right = arr + (i + 1) * size;
+        if(compare(left, right) > 0)
+        {
+            return false;
+        }
+    }
+    return true;
 }
  
 /* ======================================================================
