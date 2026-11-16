@@ -49,6 +49,7 @@ int compare_int_asc(const void *a, const void *b)
 int compare_int_desc(const void *a, const void *b)
 {
     int x = compare_int_asc(b, a);
+
     return x;
 }
 
@@ -76,7 +77,7 @@ int compare_float_asc(const void *a, const void *b)
 
 int compare_float_desc(const void *a, const void *b)
 {
-    int x = compare_flat_asc(b, a);
+    int x = compare_float_asc(b, a);
     return x;
 }
 
@@ -92,10 +93,10 @@ int compare_float_desc(const void *a, const void *b)
 
 int compare_str_asc(const void *a, const void *b)
 {
-    a = *(const char *)a;
-    b = *(const char *)b;
-    int x = strcmp(a,b);
-    return x;
+    const char *x = *(const char **)a;
+    const char *y = *(const char **)b;
+    int z = strcmp(x, y);
+    return z;
 }
 
 /*
@@ -174,7 +175,9 @@ void swap_elements(void *a, void *b, size_t size)
     {
         unsigned char x = *(unsigned char*)a;
         unsigned char y = *(unsigned char*)b;
-        return b == x, a == y;
+        *(unsigned char*)a = y;
+        *(unsigned char*)b = x;
+        return;
     }
 }
 
@@ -199,17 +202,17 @@ void swap_elements(void *a, void *b, size_t size)
 
 void bubble_sort(void *base, size_t count, size_t size, Comparator compare)
 {
-    if(base || compare == NULL)
+    if(base == NULL || compare == NULL)
     {
-        return NULL;
+        return;
     }
     if(size == 0)
     {
-        return NULL;
+        return;
     }
     if(count < 2)
     {
-        return NULL;
+        return;
     }
     else
     {
