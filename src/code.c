@@ -93,9 +93,9 @@ int compare_float_desc(const void *a, const void *b)
 
 int compare_str_asc(const void *a, const void *b)
 {
-    const char *x = *(const char **)a;
-    const char *y = *(const char **)b;
-    int z = strcmp(x, y);
+    const char *x = (const char *)a;
+    const char *y = (const char *)b;
+    int z = strcmp(x,y);
     return z;
 }
 
@@ -107,7 +107,7 @@ int compare_str_asc(const void *a, const void *b)
 
 int compare_str_desc(const void *a, const void *b)
 {
-    int x = compare_str_asc(b , a);
+    int x = compare_str_asc(b,a);
     return x;
 }
 
