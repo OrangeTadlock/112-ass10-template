@@ -158,17 +158,17 @@ int compare_strptr_desc(const void *a, const void *b)
 
 void swap_elements(void *a, void *b, size_t size)
 {
-    if(a || b == NULL)
+    if(a == NULL || b == NULL)
     {
-        return NULL;
+        return;
     }
     if(size == 0)
     {
-        return NULL;
+        return;
     }
     if(a == b)
     {
-        return NULL;
+        return;
     }
     else
     {
@@ -213,7 +213,24 @@ void bubble_sort(void *base, size_t count, size_t size, Comparator compare)
     }
     else
     {
-        return 0;
+        for(size_t k = 0; k < count - 1; k++)
+        {
+            bool swapped = false;
+            for(size_t i = 0; i < count - 1 - k; i++)
+            {
+                unsigned char *left = (unsigned char *)base + i * size;
+                unsigned char *right = (unsigned char *)base + (i + 1) * size;
+                if(compare(left, right) > 0)
+                {
+                    swap_elements(left, right, size);
+                    swapped = true;
+                }
+            }
+            if(!swapped)
+            {
+                break;
+            }
+        }
     }
 }
 
@@ -238,7 +255,10 @@ bool is_sorted_array(const void *base, size_t count, size_t size, Comparator com
         return false;
     }
     else
-    return 0;
+    {
+        return true;
+    }
+
 }
  
 /* ======================================================================
@@ -261,10 +281,12 @@ bool is_sorted_array(const void *base, size_t count, size_t size, Comparator com
 
 void sort_ints(int *arr, size_t count, bool ascending)
 {
-    // TODO
-    (void)arr;
-    (void)count;
-    (void)ascending;
+    if(arr == NULL || count < 2)
+    {
+        return;
+    }
+    qsort(arr, count, sizeof(int), ascending ? compare_int_asc : compare_int_desc);
+    
 }
 
 /*
@@ -275,10 +297,11 @@ void sort_ints(int *arr, size_t count, bool ascending)
 
 void sort_floats(float *arr, size_t count, bool ascending)
 {
-    // TODO
-    (void)arr;
-    (void)count;
-    (void)ascending;
+    if(arr == NULL || count < 2)
+    {
+        return;
+    }
+    qsort(arr, count, sizeof(float), ascending ? compare_float_asc : compare_float_desc);
 }
 
 /*
@@ -292,12 +315,12 @@ void sort_floats(float *arr, size_t count, bool ascending)
 
 void sort_names(char names[][NAME_LEN], size_t count, bool ascending)
 {
-    // TODO
-    (void)names;
-    (void)count;
-    (void)ascending;
+    if(names == NULL || count < 2)
+    {
+        return;
+    }
+    qsort(names, count, NAME_LEN, ascending ? compare_str_asc : compare_str_desc);
 }
-
 /*
  * STEP 15: sort_string_pointers
  *
@@ -309,10 +332,11 @@ void sort_names(char names[][NAME_LEN], size_t count, bool ascending)
 
 void sort_string_pointers(char **strs, size_t count, bool ascending)
 {
-    // TODO
-    (void)strs;
-    (void)count;
-    (void)ascending;
+    if(strs == NULL || count < 2)
+    {
+        return;
+    }
+    qsort(strs, count, sizeof(char *), ascending ? compare_strptr_asc : compare_strptr_desc);
 }
 
 /*
@@ -327,10 +351,18 @@ void sort_string_pointers(char **strs, size_t count, bool ascending)
 
 int *sorted_copy(const int *arr, size_t count)
 {
-    // TODO
-    (void)arr;
-    (void)count;
-    return NULL;
+    if(arr == NULL || count == 0)
+    {
+        return NULL;
+    }
+    int *copy = malloc(count * sizeof(int));
+    if(copy == NULL)
+    {
+        return NULL;
+    }
+    memcpy(copy, arr, count * sizeof(int));
+    qsort(copy, count, sizeof(int), compare_int_asc);
+    return copy;
 }
 
 /*
@@ -347,11 +379,25 @@ int *sorted_copy(const int *arr, size_t count)
 
 bool find_median(const int *arr, size_t count, float *out)
 {
-    // TODO
-    (void)arr;
-    (void)count;
-    (void)out;
-    return false;
+    if(arr == NULL || count == 0 || out == NULL)
+    {
+        return false;
+    }
+    int *sorted = sorted_copy(arr, count);
+    if(sorted == NULL)
+    {
+        return false;
+    }
+    if(count % 2 == 1)
+    {
+        *out = (float)sorted[count / 2];
+    }
+    else
+    {
+        *out = ((float)sorted[count / 2 - 1] + (float)sorted[count / 2]) / 2.0f;
+    }
+    free(sorted);
+    return true;
 }
 
 /*
@@ -365,9 +411,24 @@ bool find_median(const int *arr, size_t count, float *out)
 
 bool has_duplicates(const int *arr, size_t count)
 {
-    // TODO
-    (void)arr;
-    (void)count;
+    if(arr == NULL || count < 2)
+    {
+        return false;
+    }
+    int *sorted = sorted_copy(arr, count);
+    if(sorted == NULL)
+    {
+        return false;
+    }
+    for(size_t i = 0; i < count - 1; i++)
+    {
+        if(sorted[i] == sorted[i + 1])
+        {
+            free(sorted);
+            return true;
+        }
+    }
+    free(sorted);
     return false;
 }
 
@@ -380,9 +441,16 @@ bool has_duplicates(const int *arr, size_t count)
 
 int compare_students_by_age(const void *a, const void *b)
 {
-    // TODO
-    (void)a;
-    (void)b;
+    const Student *student_a = (const Student *)a;
+    const Student *student_b = (const Student *)b;
+    if(student_a->age < student_b->age)
+    {
+        return -1;
+    }
+    if(student_a->age > student_b->age)
+    {
+        return 1;
+    }
     return 0;
 }
 
@@ -398,9 +466,25 @@ int compare_students_by_age(const void *a, const void *b)
 
 int compare_students_ranking(const void *a, const void *b)
 {
-    // TODO
-    (void)a;
-    (void)b;
+    const Student *student_a = (const Student *)a;
+    const Student *student_b = (const Student *)b;
+    if(student_a->score > student_b->score)
+    {
+        return -1;
+    }
+    if(student_a->score < student_b->score)
+    {
+        return 1;
+    }
+    int name_cmp = strcmp(student_a->name, student_b->name);
+    if(name_cmp < 0)
+    {
+        return -1;
+    }
+    if(name_cmp > 0)
+    {
+        return 1;
+    }
     return 0;
 }
 
@@ -414,7 +498,9 @@ int compare_students_ranking(const void *a, const void *b)
 
 void rank_students(Student *students, size_t count)
 {
-    // TODO
-    (void)students;
-    (void)count;
+    if(students == NULL || count < 2)
+    {
+        return;
+    }
+    qsort(students, count, sizeof(Student), compare_students_ranking);
 }
